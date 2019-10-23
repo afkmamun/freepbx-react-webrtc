@@ -4,7 +4,6 @@ An example application is [found here](https://github.com/keyroii/freepbx-react-
 
 To get started:
 
-# TODO: NOT YET PUBLISHED
 `$ npm install freepbx-react-webrtc --save`
 
 The component has been tested to work in combinations of the following web browsers updated to latest versions with video and voice calls:
