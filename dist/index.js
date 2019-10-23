@@ -66,14 +66,40 @@ var WebRTCClient = function (_Component) {
       sipServer = props.sipServer;
     }
 
+    var webSocketPort = "8089";
+    if (props.webSocketPort) {
+      webSocketPort = props.webSocketPort;
+    }
+
+    var stunServerList;
+    if (props.skipStunServer) {
+      stunServerList = [];
+    } else {
+      if (props.stunServerList) {
+        stunServerList = props.stunServerList;
+      } else {
+        stunServerList = [{ urls: "stun:stun.l.google.com:19302" }];
+      }
+    }
+
     _this.state = {
-      userid: props.sipUser, video: props.video, domain: props.sipDomain, sipServer: sipServer,
-      password: props.sipPassword, destination: props.destination,
+      userid: props.sipUser,
+      audio: props.enableSound,
+      video: props.enableVideo,
+      domain: props.sipDomain,
+      sipServer: sipServer,
+      webSocketPort: webSocketPort,
+      password: props.sipPassword,
+      destination: props.destination,
       metaData: props.metaData,
-      autoRegister: props.autoRegister, callState: "Idle",
+      autoRegister: props.autoRegister,
+      callState: "Idle",
       enableButtons: true,
       ringbackVideoUrl: props.ringbackVideoUrl,
-      alertVideoUrl: props.alertVideoUrl
+      alertVideoUrl: props.alertVideoUrl,
+      localVideoTagId: props.localVideoTagId,
+      remoteVideoTagId: props.remoteVideoTagId,
+      stunServer: stunServerList
     };
     return _this;
   }
@@ -86,22 +112,21 @@ var WebRTCClient = function (_Component) {
       this.testMedia();
 
       var options = {
-
         uri: this.state.userid + "@" + this.state.domain,
         transportOptions: {
-          wsServers: ["wss://" + this.state.sipServer + ":7443/ws"],
+          wsServers: ["wss://" + this.state.sipServer + ":" + this.state.webSocketPort + "/ws"],
           traceSip: true
         },
         sessionDescriptionHandlerFactoryOptions: {
           peerConnectionOptions: {
             iceCheckingTimeout: 500,
             rtcConfiguration: {
-              iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+              iceServers: this.state.stunServer
             }
           },
 
           constraints: {
-            audio: true,
+            audio: this.state.audio,
             video: this.state.video
           }
         },
@@ -112,7 +137,6 @@ var WebRTCClient = function (_Component) {
         autostart: false,
         //hackIpInContact:true,
         hackWssInTransport: true
-
       };
 
       this.connectionStateChanged("Disconnected");

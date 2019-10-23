@@ -1,9 +1,9 @@
 {
-  "name": "iotcomms-react-webrtc",
-  "version": "1.0.4",
-  "description": "React.js component offering mobile and desktop browser voice and video communication. Wraps sip.js with the nitty gritty details required make it work in such environments to help focus on application development.",
+  "name": "freepbx-react-webrtc",
+  "version": "1.0.0",
+  "description": "React.js component for video calls over WebRTC",
   "main": "dist/index.js",
-  "author": "iotcomms <developers@iotcomms.io> (https://iotcomms.io)",
+  "author": "Keyroii <github@codingkey.dev>",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iotcomms/iotcomms-react-webrtc.git"
+    "url": "git+https://github.com/keyroii/freepbx-react-webrtc"
   },
   "keywords": [
     "voip",
@@ -25,9 +25,9 @@
     "react"
   ],
   "bugs": {
-    "url": "https://github.com/iotcomms/iotcomms-react-webrtc/issues"
+    "url": "https://github.com/keyroii/freepbx-react-webrtc/issues"
   },
-  "homepage": "https://github.com/iotcomms/iotcomms-react-webrtc#readme",
+  "homepage": "https://github.com/keyroii/freepbx-react-webrtc#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
