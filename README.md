@@ -27,7 +27,7 @@ Below is an example of how to embed the component in a React.js application
 
 ```javascript
 
-  import WebRTCClient from "iotcomms-react-webrtc";
+  import WebRTCClient from "freepbx-react-webrtc";
 
 
   render() {
