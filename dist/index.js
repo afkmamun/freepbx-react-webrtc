@@ -25,10 +25,6 @@ var _Button2 = _interopRequireDefault(_Button);
 
 var _sip = require("sip.js");
 
-var _ringback = require("./ringback.mp4");
-
-var _ringback2 = _interopRequireDefault(_ringback);
-
 var _alert = require("./alert.mp4");
 
 var _alert2 = _interopRequireDefault(_alert);
@@ -46,19 +42,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _require = require("detect-browser"),
-    detect = _require.detect;
+  detect = _require.detect;
 
 // eslint-disable-next-line
 
-
-var adapter = require('webrtc-adapter');
 
 var WebRTCClient = function (_Component) {
   _inherits(WebRTCClient, _Component);
 
   function WebRTCClient(props, context) {
     _classCallCheck(this, WebRTCClient);
-
     var _this = _possibleConstructorReturn(this, (WebRTCClient.__proto__ || Object.getPrototypeOf(WebRTCClient)).call(this, props, context));
 
     var sipServer = props.sipDomain;
@@ -84,8 +77,8 @@ var WebRTCClient = function (_Component) {
 
     _this.state = {
       userid: props.sipUser,
-      audio: props.enableSound,
-      video: props.enableVideo,
+      audio: this.props.enableSound,
+      video: this.props.enableVideo,
       domain: props.sipDomain,
       sipServer: sipServer,
       webSocketPort: webSocketPort,
@@ -99,7 +92,7 @@ var WebRTCClient = function (_Component) {
       alertVideoUrl: props.alertVideoUrl,
       localVideoTagId: props.localVideoTagId,
       remoteVideoTagId: props.remoteVideoTagId,
-      stunServer: stunServerList
+      stunServer: stunServerList,
     };
     return _this;
   }
@@ -109,13 +102,35 @@ var WebRTCClient = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      // region eventhandler
+      this.props.eventHandler.on("hangupCall", function() {
+        _this2.hangupCall();
+      });
+
+      this.props.eventHandler.on("answerCall", function() {
+        _this2.answerCall();
+      });
+
+      this.props.eventHandler.on("placeCall", function() {
+        _this2.placeCall();
+      });
+
+      this.props.eventHandler.on("toggleMicrophone", function() {
+        _this2.toggleMedia("audio");
+      });
+
+      this.props.eventHandler.on("toggleVideo", function() {
+        _this2.toggleMedia("video");
+      });
+      // endregion eventhandler
+
       this.testMedia();
 
       var options = {
         uri: this.state.userid + "@" + this.state.domain,
         transportOptions: {
           wsServers: ["wss://" + this.state.sipServer + ":" + this.state.webSocketPort + "/ws"],
-          traceSip: true
+          traceSip: this.props.traceSip
         },
         sessionDescriptionHandlerFactoryOptions: {
           peerConnectionOptions: {
@@ -126,8 +141,8 @@ var WebRTCClient = function (_Component) {
           },
 
           constraints: {
-            audio: this.state.audio,
-            video: this.state.video
+            audio: this.props.enableSound,
+            video: this.props.enableVideo
           }
         },
 
@@ -205,7 +220,6 @@ var WebRTCClient = function (_Component) {
   }, {
     key: "hangupCall",
     value: function hangupCall() {
-
       try {
         this.currentSession.terminate();
         // eslint-disable-next-line
@@ -216,12 +230,13 @@ var WebRTCClient = function (_Component) {
     value: function handleCall(session) {
       var _this4 = this;
 
-      var localVideo = document.getElementById("localVideo");
+      var localVideo = document.getElementById(_this4.props.localVideoTagId);
       this.currentSession = session;
 
       this.currentSession.on("terminated", function () {
-        var localVideo = document.getElementById("localVideo");
-        var remoteVideo = document.getElementById("remoteVideo");
+        var localVideo = document.getElementById(_this4.props.localVideoTagId);
+        var remoteVideo = document.getElementById(_this4.props.remoteVideoTagId);
+
         localVideo.src = "";
         localVideo.srcObject = null;
         remoteVideo.pause();
@@ -279,6 +294,19 @@ var WebRTCClient = function (_Component) {
       });
     }
   }, {
+    key: "toggleMedia",
+    value: function toggleMedia(trackKindToToggle) {
+      if(this.currentSession){
+        if(this.currentSession.sessionDescriptionHandler) {
+          this.currentSession.sessionDescriptionHandler.peerConnection.getSenders().forEach(function (stream) {
+            if(stream.track.kind === trackKindToToggle) {
+              stream.track.enabled = !stream.track.enabled;
+            }
+          });
+        }
+      }
+    }
+  }, {
     key: "answerCall",
     value: function answerCall() {
       if (this.currentSession) {
@@ -293,7 +321,7 @@ var WebRTCClient = function (_Component) {
     key: "incomingCall",
     value: function incomingCall(session) {
       this.setState({ callState: "Alerting" });
-      var remoteVideo = document.getElementById("remoteVideo");
+      var remoteVideo = document.getElementById(this.props.remoteVideoTagId);
 
       if (this.state.alertVideoUrl) {
         remoteVideo.src = this.state.alertVideoUrl;
@@ -330,7 +358,7 @@ var WebRTCClient = function (_Component) {
     value: function callConnected() {
       if (this.remoteStream) {
         try {
-          var remoteVideo = document.getElementById("remoteVideo");
+          var remoteVideo = document.getElementById(this.props.remoteVideoTagId);
           remoteVideo.srcObject = this.remoteStream;
           remoteVideo.play().catch(function () {});
           // eslint-disable-next-line
@@ -372,46 +400,18 @@ var WebRTCClient = function (_Component) {
   }, {
     key: "renderCallButtons",
     value: function renderCallButtons() {
-      var _this6 = this;
-
       if (this.state.callState != "Canceling" && this.state.enableButtons) {
         if (this.state.callState === "Idle") {
-          return _react2.default.createElement(
-            _Button2.default,
-            { color: "primary", onClick: function onClick() {
-                _this6.avoidDoubleTap();
-                var remoteVideo = document.getElementById("remoteVideo");
-                if (_this6.state.ringbackVideoUrl) {
-                  remoteVideo.src = _this6.state.ringbackVideoUrl;
-                } else {
-                  remoteVideo.src = _ringback2.default;
-                }
-                remoteVideo.setAttribute("loop", true);
-                remoteVideo.play();
-                _this6.placeCall();
-              } },
-            "Call"
-          );
+          this.props.eventHandler.emit("Idle");
         }
-
+        if (this.state.callState === "Calling") {
+          this.props.eventHandler.emit("Calling");
+        }
         if (this.state.callState === "Alerting") {
-          return _react2.default.createElement(
-            _Button2.default,
-            { color: "primary", onClick: function onClick() {
-                _this6.avoidDoubleTap();
-                _this6.answerCall();
-              } },
-            "Answer"
-          );
-        } else {
-          return _react2.default.createElement(
-            _Button2.default,
-            { color: "primary", onClick: function onClick() {
-                _this6.avoidDoubleTap();
-                _this6.hangupCall();
-              } },
-            "Hang up"
-          );
+          this.props.eventHandler.emit("Alerting");
+        }
+        if (this.state.callState === "InCall") {
+          this.props.eventHandler.emit("InCall");
         }
       } else {
         return null;
@@ -461,22 +461,13 @@ var WebRTCClient = function (_Component) {
           "div",
           null,
           this.state.connectionState === "Connected" ? this.renderCallButtons() : null,
-          _react2.default.createElement(
-            "div",
-            null,
-            this.renderCallState()
-          ),
+          this.props.updateCallState(this.state.callState),
           _react2.default.createElement(
             "div",
             null,
             this.state.error
           ),
-          _react2.default.createElement(
-            "div",
-            null,
-            "Server ",
-            this.state.connectionState
-          ),
+          this.props.updateConnectionState(this.state.connectionState),
           this.state.receivedMeta ? _react2.default.createElement(
             "div",
             null,

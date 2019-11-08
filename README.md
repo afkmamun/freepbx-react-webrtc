@@ -37,7 +37,7 @@ Below is an example of how to embed the component in a React.js application
 
         //Video element used for rendering video of remote party
         <video width="50%" id="remoteVideo" autoPlay playsInline ></video>
-
+        
         <WebRTCClient
           enableVideo={true}
           enableSound={true}
