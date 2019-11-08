@@ -9,11 +9,21 @@
 
 "use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
 
 var _react = require("react");
 
@@ -33,13 +43,27 @@ var _propTypes = require("prop-types");
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
 
 var _require = require("detect-browser"),
   detect = _require.detect;
@@ -92,7 +116,7 @@ var WebRTCClient = function (_Component) {
       alertVideoUrl: props.alertVideoUrl,
       localVideoTagId: props.localVideoTagId,
       remoteVideoTagId: props.remoteVideoTagId,
-      stunServer: stunServerList,
+      stunServer: stunServerList
     };
     return _this;
   }
@@ -296,10 +320,10 @@ var WebRTCClient = function (_Component) {
   }, {
     key: "toggleMedia",
     value: function toggleMedia(trackKindToToggle) {
-      if(this.currentSession){
-        if(this.currentSession.sessionDescriptionHandler) {
+      if (this.currentSession) {
+        if (this.currentSession.sessionDescriptionHandler) {
           this.currentSession.sessionDescriptionHandler.peerConnection.getSenders().forEach(function (stream) {
-            if(stream.track.kind === trackKindToToggle) {
+            if (stream.track.kind === trackKindToToggle) {
               stream.track.enabled = !stream.track.enabled;
             }
           });
@@ -381,11 +405,7 @@ var WebRTCClient = function (_Component) {
         stateDescription = "Canceling call";
       }
 
-      return _react2.default.createElement(
-        "div",
-        null,
-        stateDescription
-      );
+      return _react2.default.createElement("div", null, stateDescription);
     }
   }, {
     key: "avoidDoubleTap",
@@ -421,84 +441,28 @@ var WebRTCClient = function (_Component) {
     key: "renderPermissionProblems",
     value: function renderPermissionProblems() {
       if (this.state.browser == "crios") {
-        return _react2.default.createElement(
-          "div",
-          null,
-          "You are using Chrome on iPhone. It does not support WebRTC. Please test again using Safari."
-        );
+        return _react2.default.createElement("div", null, "You are using Chrome on iPhone. It does not support WebRTC. Please test again using Safari.");
       } else {
-        return [_react2.default.createElement(
-          "div",
-          { key: "permissionNote1" },
-          "You have not permitted use of camera and microphone, or your device is not WebRTC capable."
-        ), _react2.default.createElement(
-          "div",
-          { key: "permissionNote2" },
-          "Please verify your settings."
-        ), _react2.default.createElement(
-          _Button2.default,
-          { key: "permissionButton1",
-            onClick: function onClick() {
-              window.location.reload();
-            }
-          },
-          "Try to reload page"
-        ), _react2.default.createElement(
-          "div",
-          { key: "permissionNote3" },
-          !this.state.usingHttps ? "Warning: Page is not loaded via HTTPS. It may cause permission problems accessing camera and microphone!" : null,
-          this.state.browser,
-          " ",
-          this.state.os
-        )];
+        return [_react2.default.createElement("div", { key: "permissionNote1" }, "You have not permitted use of camera and microphone, or your device is not WebRTC capable."), _react2.default.createElement("div", { key: "permissionNote2" }, "Please verify your settings."), _react2.default.createElement(_Button2.default, { key: "permissionButton1",
+          onClick: function onClick() {
+            window.location.reload();
+          }
+        }, "Try to reload page"), _react2.default.createElement("div", { key: "permissionNote3" }, !this.state.usingHttps ? "Warning: Page is not loaded via HTTPS. It may cause permission problems accessing camera and microphone!" : null, this.state.browser, " ", this.state.os)];
       }
     }
   }, {
     key: "renderCallControl",
     value: function renderCallControl() {
       if (this.state.mediaSupported) {
-        return _react2.default.createElement(
-          "div",
-          null,
-          this.state.connectionState === "Connected" ? this.renderCallButtons() : null,
-          this.props.updateCallState(this.state.callState),
-          _react2.default.createElement(
-            "div",
-            null,
-            this.state.error
-          ),
-          this.props.updateConnectionState(this.state.connectionState),
-          this.state.receivedMeta ? _react2.default.createElement(
-            "div",
-            null,
-            "Received meta data: ",
-            JSON.stringify(this.state.receivedMeta)
-          ) : null
-        );
+        return _react2.default.createElement("div", null, this.state.connectionState === "Connected" ? this.renderCallButtons() : null, this.props.updateCallState(this.state.callState), _react2.default.createElement("div", null, this.state.error), this.props.updateConnectionState(this.state.connectionState), this.state.receivedMeta ? _react2.default.createElement("div", null, "Received meta data: ", JSON.stringify(this.state.receivedMeta)) : null);
       } else {
-        return _react2.default.createElement(
-          "div",
-          null,
-          this.renderPermissionProblems()
-        );
+        return _react2.default.createElement("div", null, this.renderPermissionProblems());
       }
     }
   }, {
     key: "render",
     value: function render() {
-      return _react2.default.createElement(
-        "div",
-        null,
-        this.state.mediaTested ? this.renderCallControl() : [_react2.default.createElement(
-          "div",
-          { key: "requestPermissions1" },
-          "Requesting camera and microphone permissions..."
-        ), _react2.default.createElement(
-          "div",
-          { key: "requestPermissions2" },
-          "Please allow the application to use microphone and camera."
-        )]
-      );
+      return _react2.default.createElement("div", null, this.state.mediaTested ? this.renderCallControl() : [_react2.default.createElement("div", { key: "requestPermissions1" }, "Requesting camera and microphone permissions..."), _react2.default.createElement("div", { key: "requestPermissions2" }, "Please allow the application to use microphone and camera.")]);
     }
   }]);
 
