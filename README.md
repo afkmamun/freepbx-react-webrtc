@@ -1,6 +1,6 @@
-This is a fork of the [iotcomms implementation for general webrtc](https://github.com/iotcomms/iotcomms-react-webrtc)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
 
-An example application is [found here](https://github.com/keyroii/freepbx-react-webrtc-example)
+This is a fork of the [iotcomms implementation for general webrtc](https://github.com/iotcomms/iotcomms-react-webrtc)
 
 To get started:
 
@@ -8,27 +8,29 @@ To get started:
 
 The main objective of the component is to provide a high-level logic providing WebRTC functionality to web applications where the developer should not have to dig into the details of how SIP, Peer connections, Sessions and Video elements interact during the lifecycle of a call.
 
-It provides high level configuration through React.js Component properties. Once the component is mounted it will establish a connection back to the provisioned SIP server via WebSocket connection. From now it is ready to place and receive calls and it provides user interface to interact with the calls.
-
+An example application is [found here](https://github.com/keyroii/freepbx-react-webrtc-example)
+<br>
 ## Events that are called by component
 
 | Event        | Description           |
-| ------------- |-------------:|
+| ------------- |:-------------|
 | Idle      | Called when connected to service and there is no call coming in or going out |
 | Calling      | Called when there is an outgoing call      |
 | Alerting | Called when there is an incoming call going on      |
 | InCall | Called multiple times while call is connected and running      |
-
+| error | Called when error is happening, passes 2 parameters (response, cause)      |
+<br>
 ## Events that are needed to get called to interact with the component
 
 | Event        | Description           |
-| ------------- |-------------:|
+| ------------- |:-------------|
 | answerCall      | Accept an incoming call when there is one ("Alerting") |
 | placeCall      | Calls the defined destination URI      |
 | hangupCall | Cancels outgoing or running Call      |
 | toggleMicrophone | Toggles outgoing sound track (true / false). Used to mute outgoing sound.      |
 | toggleVideo | Toggles outgoing video track (true / false). Used to mute outgoing video.      |
 
+<br>
 
 ### Below is an example of how to embed the component in a React.js application
 
@@ -47,6 +49,11 @@ It provides high level configuration through React.js Component properties. Once
   
   // Default Events that are called by the WebRTCClient
   componentDidMount() {
+    // On Error
+    this.state.eventHandler.on("error", function(response, cause) {
+      // Do something...
+    });
+
     // Connected and Idle
     this.state.eventHandler.on("Idle", function() {
       // Do something...
@@ -67,6 +74,10 @@ It provides high level configuration through React.js Component properties. Once
       // Do something...
     });
   }
+  
+  acceptCall = () => {
+  	this.state.eventHandler.emit("answerCall");
+  }
 
   render() {
     return (
@@ -77,6 +88,10 @@ It provides high level configuration through React.js Component properties. Once
         //Video element used for rendering video of remote party
         <video width="50%" id="remoteVideo" autoPlay playsInline ></video>
 
+
+		// Example Accept Button
+		<Button onClick={this.acceptCall}>Accept Call</Button>
+		
         <WebRTCClient
           enableVideo={true}
           enableSound={true}
@@ -106,9 +121,11 @@ It provides high level configuration through React.js Component properties. Once
 }
 
 ```
+<br>
 
+## Component Parameters
 | Parameter        | Description           |
-| ------------- |-------------:|
+| ------------- |:-------------|
 | enableVideo | indicates if video should be enabled for calls |
 | enableSound | indicates if sound should be enabled for calls |
 | autoRegister | indicates if the component should send a SIP Register to be able to receive calls |
@@ -117,8 +134,8 @@ It provides high level configuration through React.js Component properties. Once
 | sipUser | is the user id to be used for authentication |
 | destination | is the remote URI destination to be called |
 | metaData | is an object to be passed to the remote side in a X-MetaData SIP header. The object is JSON stringified and then URL encoded before inserted as header value |
-| alertVideoUrl | is an optional sring with an URL pointing to a video file supported by the  <video> element. This file is played when an inbound call is received. If the property is omitted a default file is played |
-| ringbackVideoUrl | is an optional sring with an URL pointing to a video file supported by the  <video> element. This file is played when an call is placed until it has been answered. If the property is omitted a default file is played |
+| alertVideoUrl | is an optional sring with an URL pointing to a video file supported by the  video element. This file is played when an inbound call is received. If the property is omitted a default file is played |
+| ringbackVideoUrl | is an optional sring with an URL pointing to a video file supported by the  video element. This file is played when an call is placed until it has been answered. If the property is omitted a default file is played |
 | skipStunServer | indicates if a STUN server should be used. Disable when only working in local network |
 | stunServerList | list of Dicts with STUN Servers to use |
 | eventHandler | EventHandler to communicate between the parent and child component |

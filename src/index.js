@@ -160,8 +160,9 @@ var WebRTCClient = function (_Component) {
 
       this.sipUa.once("transportCreated", function (transport) {
 
-        transport.on("transportError", function () {
-          _this2.setState({ error: "Network connection error" });
+        transport.on("transportError", function (response, cause)  {
+          _this2.props.eventHandler.emit("error", response, cause);
+          // _this2.setState({ error: "Network connection error" });
         });
 
         transport.on("connecting", function () {
@@ -170,7 +171,7 @@ var WebRTCClient = function (_Component) {
 
         transport.on("connected", function () {
           _this2.connectionStateChanged("Connected");
-          _this2.setState({ error: "" });
+          // _this2.setState({ error: "" });
         });
 
         transport.on("disconnecting", function () {
@@ -258,7 +259,8 @@ var WebRTCClient = function (_Component) {
       });
 
       this.currentSession.on("rejected", function (response, cause) {
-        _this4.setState({ error: "Call failed: " + cause });
+        _this4.props.eventHandler.emit("error", response, cause);
+        // _this4.setState({ error: "Call failed: " + cause });
       });
 
       this.currentSession.on("SessionDescriptionHandler-created", function () {
@@ -311,7 +313,7 @@ var WebRTCClient = function (_Component) {
     value: function answerCall() {
       if (this.currentSession) {
         try {
-          this.setState({ error: "" });
+          // this.setState({ error: "" });
           this.currentSession.accept();
           // eslint-disable-next-line
         } catch (e) {}
