@@ -10,6 +10,7 @@ The main objective of the component is to provide a high-level logic providing W
 
 An example application is [found here](https://github.com/keyroii/freepbx-react-webrtc-example)
 <br>
+
 ## Events that are called by component
 
 | Event        | Description           |
@@ -20,6 +21,7 @@ An example application is [found here](https://github.com/keyroii/freepbx-react-
 | InCall | Called multiple times while call is connected and running      |
 | error | Called when error is happening, passes 2 parameters (response, cause)      |
 <br>
+
 ## Events that are needed to get called to interact with the component
 
 | Event        | Description           |
@@ -27,9 +29,10 @@ An example application is [found here](https://github.com/keyroii/freepbx-react-
 | answerCall      | Accept an incoming call when there is one ("Alerting") |
 | placeCall      | Calls the defined destination URI      |
 | hangupCall | Cancels outgoing or running Call      |
-| toggleMicrophone | Toggles outgoing sound track (true / false). Used to mute outgoing sound.      |
-| toggleVideo | Toggles outgoing video track (true / false). Used to mute outgoing video.      |
+| toggleMicrophone | Toggles outgoing sound track (true / false). Used to mute outgoing sound only.      |
+| toggleVideo | Toggles outgoing video track (true / false). Used to mute outgoing video only.      |
 
+To toggle incoming sound / video interact with the video element directly
 <br>
 
 ### Below is an example of how to embed the component in a React.js application
@@ -89,8 +92,8 @@ An example application is [found here](https://github.com/keyroii/freepbx-react-
         <video width="50%" id="remoteVideo" autoPlay playsInline ></video>
 
 
-		// Example Accept Button
-		<Button onClick={this.acceptCall}>Accept Call</Button>
+        // Example Accept Button
+        <Button onClick={this.acceptCall}>Accept Call</Button>
 		
         <WebRTCClient
           enableVideo={true}

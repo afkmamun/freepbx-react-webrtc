@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 //
 // Copyright (c) IOT Communications International . All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
@@ -159,7 +160,7 @@ var WebRTCClient = function (_Component) {
       this.sipUa = new _sip.UA(options);
 
       this.sipUa.once("transportCreated", function (transport) {
-
+        
         transport.on("transportError", function (response, cause)  {
           _this2.props.eventHandler.emit("error", response, cause);
           // _this2.setState({ error: "Network connection error" });
